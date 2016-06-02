@@ -6,18 +6,15 @@
     <link href="jquery.terminal.min.css" rel="stylesheet"/>
 
     <style>
-
         .prompt {
             color: #fff;
             text-shadow: 0 0 3px rgba(0,100,0,50);
         }
         
-
         body {
             margin: 0;
             height: 99%%;
         }
-
     </style>
 </head>
 
@@ -34,16 +31,9 @@
             }
 
             ws = undefined
-
             var ws = new WebSocket(command)
 
-            var watchdog = setTimeout(function(){
-                
-            })
-
             ws.onopen = function(){
-                clearTimeout(watchdog)
-
                 ws.onclose = term.exit
                 ws.onerror = term.exit
 
@@ -62,9 +52,7 @@
                         term.echo("Disconnected.")
                         ws.close()
                     }
-
                 })
-
             }
 
             var err = function(event){
@@ -86,6 +74,4 @@
     });
 });
 </script>
-
-
 </html>
