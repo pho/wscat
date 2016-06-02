@@ -1,0 +1,91 @@
+<html>
+<head>
+    <title>WebSocket client</title>
+    <script src="jquery.min.js"></script>
+    <script src="jquery.terminal.min.js"></script>
+    <link href="jquery.terminal.min.css" rel="stylesheet"/>
+
+    <style>
+
+        .prompt {
+            color: #fff;
+            text-shadow: 0 0 3px rgba(0,100,0,50);
+        }
+        
+
+        body {
+            margin: 0;
+            height: 99%%;
+        }
+
+    </style>
+</head>
+
+<body id="term"></body>
+
+<script>
+    jQuery(function($, undefined) {
+    $('#term').terminal(function(command, term) {
+        if (command !== '') {
+
+            if (ws != undefined) {  
+                term.echo("bye")
+                ws.close()
+            }
+
+            ws = undefined
+
+            var ws = new WebSocket(command)
+
+            var watchdog = setTimeout(function(){
+                
+            })
+
+            ws.onopen = function(){
+                clearTimeout(watchdog)
+
+                ws.onclose = term.exit
+                ws.onerror = term.exit
+
+                ws.onmessage = function (event) {
+                    term.echo("<< [[;#0c0;#000]" + String(event.data) + "]")
+                }
+
+                term.resume()
+
+                term.push(function(command, term) {
+                    ws.send(command)
+                }, {
+                    name: 'wsconn',
+                    prompt: "[[;#add8e6;#000]" + command + ":~$] ",
+                    onExit: function(){
+                        term.echo("Disconnected.")
+                        ws.close()
+                    }
+
+                })
+
+            }
+
+            var err = function(event){
+                term.resume()
+            }
+
+            ws.onclose = err
+            ws.onerror = err
+
+            term.pause()
+
+        } else {
+           term.echo('');
+        }
+    }, {
+        greetings: '[[gu;#add8e6;#000]WebSocket Client - netcat like]\n\n',
+        name: 'wsclient',
+        prompt: 'Connect to: '
+    });
+});
+</script>
+
+
+</html>
