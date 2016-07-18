@@ -34,8 +34,13 @@
             var ws = new WebSocket(command)
 
             ws.onopen = function(){
-                ws.onclose = term.exit
-                ws.onerror = term.exit
+
+                ws.onclose = function() {
+			term.pop()
+		}
+                ws.onerror = function() {
+			term.pop()
+		}
 
                 ws.onmessage = function (event) {
                     term.echo("<< [[;#0c0;#000]" + String(event.data) + "]")
